@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/tesh-bhatia/bamazon#readme",
   "dependencies": {
+    "cli-table": "^0.3.1",
+    "colors": "^1.1.2",
     "dotenv": "^5.0.0",
     "inquirer": "^5.1.0",
     "mysql": "^2.15.0"
