@@ -35,12 +35,13 @@ function readItems () {
             var itemInfo = [obj.item_id, obj.product_name, obj.department_name, obj.price, obj.stock_quantity]
 
             //put items into global array
-            items.push(obj.product_name)
+            items.push(obj.product_name.toLowerCase())
             
             table.push(itemInfo)
         })
 
         console.log(table.toString())
+
         selectItem()
     })
 }
