@@ -96,8 +96,24 @@ function buyItem (item, number, stock, price) {
         function(err, res){
             if(err) throw err
 
+            updateSales(price, number, item)
+        }
+    )
+}
+
+function updateSales (price, number, item) {
+    connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+            {
+                product_sales: price*number
+            },{
+                product_name: item
+            }
+        ],
+        function(err, res){
+            if(err) throw err
             console.log('Your account has been charged $' + price*number)
-            connection.end()
         }
     )
 }
