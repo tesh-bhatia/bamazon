@@ -69,6 +69,8 @@ function readItems () {
         })
 
         console.log(table.toString())
+
+        connection.end()
     })
 }
 
@@ -91,7 +93,10 @@ function readLowInventory () {
             console.log(table.toString())
         }else{
             console.log('No items are low in stock!')
+
         }
+
+        connection.end()
 
     })
 }
@@ -107,8 +112,11 @@ function selectItem () {
         }
     ]).then(function(answer){
         var item = answer.product.toLowerCase().trim()
-        
-        if(items.includes(item)){
+        if(isNaN(answer.stock)){
+            console.log('Enter an actual number')
+            selectItem()
+        }
+        else if(items.includes(item)){
             addInventory(item, answer.stock)
         }else{
             console.log('Please select a valid item')
@@ -131,6 +139,7 @@ function addInventory (item, stock) {
         function(err, res){
             if(err) throw err
             console.log(item + ' inventory changed to ' + stock)
+            connection.end()
         })
 }
 
@@ -153,9 +162,15 @@ function tryToAddItem () {
             message: 'How much does this item cost?'
         }
     ]).then(function(answers){
+        
+        if(isNaN(answers.price) || isNaN(answers.stock)){
+            console.log('Enter an actual number')
+            tryToAddItem()
+        }
         //item already exists
-        if(items.includes(answers.item.toLowerCase().trim())){
+        else if(items.includes(answers.item.toLowerCase().trim())){
             console.log('The item already exists!')
+            connection.end()
         }else{
             addItem(answers)
         }   
@@ -175,6 +190,7 @@ function addItem (iteminfo){
         function(err, res){
             if(err) throw err
             console.log(iteminfo.item + ' added!')
+            connection.end()
         }
     )
 }

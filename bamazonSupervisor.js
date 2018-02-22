@@ -57,6 +57,8 @@ function viewSales () {
             })
 
             console.log(table.toString())
+
+            connection.end()
         }
     )
 }
@@ -74,8 +76,10 @@ function tryToAddDept () {
     ]).then(function(answers){
         if(isNaN(answers.overhead)){
             console.log('Enter an actual number for the over head costs')
+            tryToAddDept()
         }else if(depts.includes(answers.dept.toLowerCase().trim())){
             console.log('That department already exists!')
+            connection.end()
         }else{
             addDept(answers.dept, answers.overhead)
         }
@@ -92,6 +96,7 @@ function addDept (dept, overhead) {
         function(err, res){
             if(err) throw err
             console.log("Added '" + dept + "' to departments")
+            connection.end()
         }
     )
 }

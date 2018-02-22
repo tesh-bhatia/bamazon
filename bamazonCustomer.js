@@ -57,7 +57,10 @@ function selectItem () {
         }
     ]).then(function(answer){
         var item = answer.item.toLowerCase()
-        if(items.includes(item)){
+
+        if(isNaN(answer.number)){
+            console.log('Enter an actual number')
+        }else if(items.includes(item)){
             checkInventory(item, answer.number)
         }else{
             console.log('Please select a valid item')
@@ -74,7 +77,6 @@ function checkInventory (item, number) {
         var stock = res[0].stock_quantity
         var price = res[0].price
         if(number <= stock){
-            console.log('Actually buying items now')
             buyItem(item, number, stock, price)
         }else{
             console.log('Not enough stock to complete purchase')
@@ -114,6 +116,8 @@ function updateSales (price, number, item) {
         function(err, res){
             if(err) throw err
             console.log('Your account has been charged $' + price*number)
+
+            connection.end()
         }
     )
 }
