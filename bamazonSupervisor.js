@@ -30,7 +30,7 @@ function menu () {
                 viewSales()
                 break;
             case 'Create New Department':
-                
+                tryToAddDept()
                 break;
         }
     })
@@ -52,11 +52,64 @@ function viewSales () {
                 var deptInfo = [obj.department_id, obj.department_name, obj.over_head_costs, obj.product_sales, obj.total_profit]
 
                 table.push(deptInfo)
+
+                depts.push(obj.department_name.toLowerCase())
             })
 
             console.log(table.toString())
         }
     )
+}
+
+function tryToAddDept () {
+    updateDepts()
+    inquirer.prompt([
+        {
+            message: 'What is the name of the new department?',
+            name: 'dept'
+        },{
+            message: 'What are the over head costs?',
+            name: 'overhead'
+        }
+    ]).then(function(answers){
+        if(isNaN(answers.overhead)){
+            console.log('Enter an actual number for the over head costs')
+        }else if(depts.includes(answers.dept.toLowerCase().trim())){
+            console.log('That department already exists!')
+        }else{
+            addDept(answers.dept, answers.overhead)
+        }
+    })
+}
+
+function addDept (dept, overhead) {
+    connection.query(
+        'INSERT INTO departments SET ?',
+        {
+            department_name: dept,
+            over_head_costs: overhead
+        },
+        function(err, res){
+            if(err) throw err
+            console.log("Added '" + dept + "' to departments")
+        }
+    )
+}
+
+function updateDepts () {
+    // reset the items array
+    depts =[]
+    connection.query('SELECT department_name FROM departments', function (err, res){
+        if(err) throw err
+
+        res.forEach(function(obj){
+            depts.push(obj.department_name.toLowerCase())
+        })
+
+        console.log(depts)
+
+    })
+
 }
 
 menu()
